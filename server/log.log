@@ -1,0 +1,81 @@
+[INFO] 00:06:04:863 Servidor/(7826:7826): Servidor listo para recibir al cliente
+[INFO] 00:06:28:238 Servidor/(7826:7826): Se conecto un cliente!
+[INFO] 00:06:28:239 Servidor/(7826:7826): CREE LA CONEXION 5
+[INFO] 00:06:28:239 Servidor/(7826:7826): Pre creacion PELELE
+[INFO] 00:06:28:240 Servidor/(7826:7826): PELELE CREADO
+[INFO] 00:06:28:240 Servidor/(7826:7826): Recibi ID PELELE: 15
+[INFO] 00:06:28:240 Servidor/(7826:7826): Recibi TABLA DE PAGINAS PELELE: ESA
+[INFO] 00:06:28:241 Servidor/(7826:7826): Recibi ESTIMACION PELELE: 0
+[INFO] 00:06:28:241 Servidor/(7826:7826): Recibi INSTRUCCION PELELE: Holaaaa
+[INFO] 20:31:27:192 Servidor/(12185:12185): Servidor listo para recibir al cliente
+[INFO] 20:32:04:220 Servidor/(12270:12270): Servidor listo para recibir al cliente
+[INFO] 20:32:43:824 Servidor/(12378:12378): Servidor listo para recibir al cliente
+[INFO] 20:40:07:721 Servidor/(12270:12270): Se conecto un cliente!
+[INFO] 20:40:07:722 Servidor/(12270:12270): TAMANIO DE LA LISTA RECIBIDA : 0 
+[INFO] 22:21:46:533 Servidor/(23746:23746): Servidor listo para recibir al cliente
+[INFO] 02:35:32:342 Servidor/(15715:15715): Servidor listo para recibir al cliente
+[INFO] 02:47:45:212 Servidor/(16648:16648): Servidor listo para recibir al cliente
+[INFO] 02:47:55:520 Servidor/(16648:16648): Se conecto un cliente!
+[INFO] 02:47:55:521 Servidor/(16648:16648): He recibido un proceso
+[INFO] 02:47:55:521 Servidor/(16648:16648): ID PCB 15, RAFAGA EJECUTADA 16, MOTIVO HOLA, BLOQUEO 17 
+[INFO] 02:47:55:521 Servidor/(16648:16648): LLEGO HASTA ACA
+[INFO] 02:49:14:711 Servidor/(16827:16827): Servidor listo para recibir al cliente
+[INFO] 02:49:18:496 Servidor/(16827:16827): Se conecto un cliente!
+[INFO] 02:49:18:497 Servidor/(16827:16827): He recibido un proceso
+[INFO] 02:49:18:497 Servidor/(16827:16827): ID 15 
+[INFO] 02:49:18:497 Servidor/(16827:16827): TAMANIO 20 
+[INFO] 02:49:18:497 Servidor/(16827:16827): PC 3 
+[INFO] 02:49:18:497 Servidor/(16827:16827): TP 87 
+[INFO] 02:49:18:497 Servidor/(16827:16827): RAFAGA 21.500000 
+[INFO] 02:49:18:497 Servidor/(16827:16827): CANT INST 2 
+[INFO] 02:49:18:497 Servidor/(16827:16827): ID PCB 15, RAFAGA EJECUTADA 16, MOTIVO HOLA, BLOQUEO 17 
+[INFO] 02:49:18:497 Servidor/(16827:16827): LLEGO HASTA ACA
+[INFO] 02:57:06:025 Servidor/(17439:17439): Servidor listo para recibir al cliente
+[INFO] 02:57:08:151 Servidor/(17439:17439): Se conecto un cliente!
+[INFO] 02:57:49:271 Servidor/(17505:17505): Servidor listo para recibir al cliente
+[INFO] 02:57:53:077 Servidor/(17505:17505): Se conecto un cliente!
+[INFO] 02:58:29:719 Servidor/(17588:17588): Servidor listo para recibir al cliente
+[INFO] 02:58:33:382 Servidor/(17588:17588): Se conecto un cliente!
+[INFO] 02:59:45:511 Servidor/(17715:17715): Servidor listo para recibir al cliente
+[INFO] 02:59:47:624 Servidor/(17715:17715): Se conecto un cliente!
+[INFO] 03:00:21:485 Servidor/(17812:17812): Servidor listo para recibir al cliente
+[INFO] 03:00:25:014 Servidor/(17812:17812): Se conecto un cliente!
+[INFO] 03:00:25:016 Servidor/(17812:17812): He recibido un proceso
+[INFO] 03:00:25:016 Servidor/(17812:17812): ID 15 
+[INFO] 03:00:25:016 Servidor/(17812:17812): TAMANIO 20 
+[INFO] 03:00:25:016 Servidor/(17812:17812): PC 3 
+[INFO] 03:00:25:016 Servidor/(17812:17812): TP 87 
+[INFO] 03:00:25:016 Servidor/(17812:17812): RAFAGA 21.500000 
+[INFO] 03:00:25:016 Servidor/(17812:17812): CANT INST 2 
+[INFO] 03:00:25:016 Servidor/(17812:17812): ID PCB 15, RAFAGA EJECUTADA 16, MOTIVO HOLA, BLOQUEO 17 
+[INFO] 03:00:25:016 Servidor/(17812:17812): LLEGO HASTA ACA
+[INFO] 03:03:45:075 Servidor/(18015:18015): Servidor listo para recibir al cliente
+[INFO] 03:03:47:060 Servidor/(18015:18015): Se conecto un cliente!
+[INFO] 03:03:47:061 Servidor/(18015:18015): He recibido un proceso
+[INFO] 03:03:47:061 Servidor/(18015:18015): ID 15 
+[INFO] 03:03:47:061 Servidor/(18015:18015): TAMANIO 20 
+[INFO] 03:03:47:061 Servidor/(18015:18015): PC 3 
+[INFO] 03:03:47:061 Servidor/(18015:18015): TP 87 
+[INFO] 03:03:47:061 Servidor/(18015:18015): RAFAGA 21.500000 
+[INFO] 03:03:47:062 Servidor/(18015:18015): CANT INST 2 
+[INFO] 03:03:47:062 Servidor/(18015:18015): ID PCB 15, RAFAGA EJECUTADA 16, MOTIVO HOLA, BLOQUEO 17 
+[INFO] 03:03:47:062 Servidor/(18015:18015): NUEVO PC : 4
+[INFO] 03:03:47:067 Servidor/(18015:18015): LLEGO HASTA ACA
+[INFO] 03:04:51:624 Servidor/(18146:18146): Servidor listo para recibir al cliente
+[INFO] 03:04:55:299 Servidor/(18146:18146): Se conecto un cliente!
+[INFO] 03:06:13:970 Servidor/(18266:18266): Servidor listo para recibir al cliente
+[INFO] 03:06:19:202 Servidor/(18266:18266): Se conecto un cliente!
+[INFO] 12:58:15:275 Servidor/(5896:5896): Servidor listo para recibir al cliente
+[INFO] 12:58:19:761 Servidor/(5896:5896): Se conecto un cliente!
+[INFO] 12:58:46:364 Servidor/(6025:6025): Servidor listo para recibir al cliente
+[INFO] 12:58:47:909 Servidor/(6025:6025): Se conecto un cliente!
+[INFO] 12:59:08:685 Servidor/(6107:6107): Servidor listo para recibir al cliente
+[INFO] 12:59:11:750 Servidor/(6107:6107): Se conecto un cliente!
+[INFO] 13:13:04:500 Servidor/(8071:8071): Servidor listo para recibir al cliente
+[INFO] 13:13:06:650 Servidor/(8071:8071): Se conecto un cliente!
+[INFO] 13:20:21:047 Servidor/(9147:9147): Servidor listo para recibir al cliente
+[INFO] 13:20:23:729 Servidor/(9147:9147): Se conecto un cliente!
+[INFO] 14:08:25:313 Servidor/(14024:14024): Servidor listo para recibir al cliente
+[INFO] 14:08:39:284 Servidor/(14024:14024): Se conecto un cliente!
+[INFO] 14:08:39:285 Servidor/(14024:14024): Me llego el mensaje valor
+[ERROR] 14:22:03:499 Servidor/(14024:14024): el cliente se desconecto. Terminando servidor
