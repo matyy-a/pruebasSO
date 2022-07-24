@@ -7,10 +7,29 @@ int main(void) {
 	log_info(logger, "Servidor listo para recibir al cliente");
 	int cliente_fd = esperar_cliente(server_fd);
 
-//	t_list* lista = deserializarListaInstrucciones(cliente_fd);
-	t_instruccion* inst = deserializarUnaInstruccion(cliente_fd);
-	log_error(logger, "%s", inst -> identificador);
-//	log_error(logger, "%i", list_get(inst -> parametros -> elements, 0));
+//	t_list* lista = deserializarListaInstrucciones(cliente_fd)
+
+	t_list* lista = deserializarInstrucciones1Parametro(cliente_fd);
+	//log_error(logger, "LLEGO LA LISTA %i", list_size(lista) );
+	t_instruccion* inst = list_remove(lista, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+
+	inst = list_remove(lista, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,1));
+
+	inst = list_remove(lista, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+
+	inst = list_remove(lista, 0);
+	log_error(logger, "%s", inst -> identificador );
+
+	//t_instruccion* inst = deserializarUnaInstruccion(cliente_fd);
+	//log_error(logger, "%s", inst -> identificador);
+	//log_error(logger, "%i", list_get(inst -> parametros -> elements, 0));
 /*
 	PCB* unPCB = deserializarPCB(cliente_fd);
 

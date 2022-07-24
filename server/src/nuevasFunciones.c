@@ -1,15 +1,66 @@
 #include"utils.h"
 
+int numIdentificador(t_instruccion inst){
+	int n = 0;
+
+	if(string_equals_ignore_case(inst . identificador, "EXIT")){
+		n = 99;
+		return n;
+	}
+
+	if(string_equals_ignore_case(inst . identificador, "NO_OP")){
+		n = 1;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "I/O")){
+		n = 1;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "READ")){
+		n = 1;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "COPY")){
+		n = 2;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "WRITE")){
+		n = 2;
+		return n;
+	}
+
+}
+
+t_list* deserializarInstrucciones1Parametro(int emisor){
+	t_list* respuesta = list_create();
+	uint32_t cantidadInstrucciones = deserializarInt32(emisor);
+	log_warning(logger, "Instrucciones %i", cantidadInstrucciones);
+	for(int i = 0; i < cantidadInstrucciones; i++){
+		log_error(logger, "LLEGUE AL FOR");
+		t_instruccion* unaInstruccion = deserializarUnaInstruccion(emisor);
+		list_add(respuesta, unaInstruccion);
+		log_debug(logger, "DESERIALICE INST");
+	}
+	return respuesta;
+}
+
 t_instruccion* deserializarUnaInstruccion(int emisor){
 	t_instruccion* inst = asignarMemoria(sizeof(t_instruccion));
 	inst -> identificador = deserializarString(emisor);
 	inst -> parametros = queue_create();
-	uint32_t cantParametros = deserializarInt32(emisor);
-	for(int i = 0; i < cantParametros ; i++){
+	if(string_equals_ignore_case(inst -> identificador, "I/O") ||
+			string_equals_ignore_case(inst -> identificador, "NO_OP") ||
+			string_equals_ignore_case(inst -> identificador, "READ")){
 		uint32_t parametro = deserializarInt32(emisor);
 		list_add(inst -> parametros -> elements, parametro);
+	} else if(string_equals_ignore_case(inst -> identificador, "COPY") ||
+			string_equals_ignore_case(inst -> identificador, "WRITE")){
+		uint32_t parametro1 = deserializarInt32(emisor);
+		uint32_t parametro2 = deserializarInt32(emisor);
+		list_add(inst -> parametros -> elements, parametro1);
+		list_add(inst -> parametros -> elements, parametro2);
 	}
-//	inst -> parametros -> elements = deserializarListaInt32(emisor);
+
 	return inst;
 }
 

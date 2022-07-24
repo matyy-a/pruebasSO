@@ -45,7 +45,8 @@ t_log* logger;
 
 void enviarInstruccion(int socket_receptor, t_instruccion instruccion);
 t_instruccion* deserializarUnaInstruccion(int emisor);
-
+t_list* deserializarInstrucciones1Parametro(int emisor);
+int numIdentificador(t_instruccion inst);
 uint32_t tamanioTotalListaInst(t_list* lista);
 uint32_t cantidadParametros(t_list* lista);
 uint32_t tamanioParametros(t_list* lista);

@@ -35,26 +35,48 @@ int main(void)
 
 	//log_info(logger, "SIZE OF LIST NEW: %i", list_size(procesosNew));
 	t_instruccion* instrucc1 = asignarMemoria(sizeof(t_instruccion));
-	instrucc1 -> identificador = "I/O";
+	instrucc1 -> identificador = "NO_OP";
 	instrucc1 -> parametros = queue_create();
 
-	list_add(instrucc1 -> parametros -> elements, 3000);
+	list_add(instrucc1 -> parametros -> elements, 3);
+
+	t_instruccion* instrucc4 = asignarMemoria(sizeof(t_instruccion));
+	instrucc4 -> identificador = "I/O";
+	instrucc4 -> parametros = queue_create();
+
+	list_add(instrucc4 -> parametros -> elements, 5000);
+
+	t_instruccion* instrucc2 = asignarMemoria(sizeof(t_instruccion));
+	instrucc2 -> identificador = "WRITE";
+	instrucc2 -> parametros = queue_create();
+
+	list_add(instrucc2 -> parametros -> elements, 5000);
+	list_add(instrucc2 -> parametros -> elements, 3544);
+
+	t_instruccion* instrucc3 = asignarMemoria(sizeof(t_instruccion));
+	instrucc3 -> identificador = "EXIT";
+	instrucc3 -> parametros = queue_create();
 
 	t_proceso* proceso = asignarMemoria(sizeof(t_proceso));
 	proceso -> tamanio_proceso = 15;
 	proceso -> instrucciones = queue_create();
 	list_add(proceso -> instrucciones -> elements, instrucc1);
-	list_add(proceso -> instrucciones -> elements, instrucc1);
+	list_add(proceso -> instrucciones -> elements, instrucc2);
+	list_add(proceso -> instrucciones -> elements, instrucc3);
 
 	t_list* lista = list_create();
 	list_add(lista, instrucc1);
-	list_add(lista, instrucc1);
-	list_add(lista, instrucc1);
+	list_add(lista, instrucc2);
+	list_add(lista, instrucc4);
+	list_add(lista, instrucc3);
+	//list_add(lista, instrucc3);
 
 	//enviarInstrucciones(lista, logger);
 	//uint32_t t = tamanioTotalListaInst(lista);
-	enviarInstruccion(conexion, *instrucc1);
-	log_error(logger, "ENVIE INSTRUCCION");
+	//enviarInstruccion(conexion, *instrucc1);
+	log_warning(logger, "NUMERO %i",numIdentificador(*instrucc3));
+	enviarInstrucciones(conexion, lista, logger);
+	//log_error(logger, "ENVIE INSTRUCCION");
 
 
 /*

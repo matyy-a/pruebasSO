@@ -38,25 +38,77 @@ t_list* deserializarListaInstrucciones(int socket_emisor){
 	return respuesta;
 	}
 
-void enviarInstrucciones(int socket_receptor, t_list* lista){
+void enviarInstrucciones(int socket_receptor, t_list* lista, t_log* logger){
 	uint32_t cantidadInstrucciones = list_size(lista);
-	int tamanioBuffer = 100 + sizeof(uint32_t) + tamanioTotalListaInst(lista);
+	int tamanioBuffer = sizeof(uint32_t) + sizeof(uint32_t)*tamanioTotalListaInst(lista);
 	void* buffer = asignarMemoria(tamanioBuffer);
 
 	int desplazamiento = 0;
-
 	concatenarInt32(buffer, &desplazamiento, cantidadInstrucciones);
-
 	for(int i = 0; i < cantidadInstrucciones; i++){
 		t_instruccion* instruccion = list_get(lista, i);
+		log_debug(logger, "FOR %s", instruccion -> identificador);
 		concatenarString(buffer, &desplazamiento, instruccion -> identificador);
-		concatenarListaInt32(buffer, &desplazamiento, instruccion -> parametros -> elements);
+		int parametros = numIdentificador(*instruccion);
+		log_error(logger, "%s %i", instruccion -> identificador, parametros);
+		switch(parametros){
+			case 1:
+				log_warning(logger, "PRIMER CASO");
+				uint32_t unParametro = list_get(instruccion -> parametros -> elements, 0);
+				concatenarInt32(buffer, &desplazamiento, unParametro);
+				break;
+			case 2:
+				log_warning(logger, "SEGUNDO CASO");
+				uint32_t param1 = list_get(instruccion -> parametros -> elements, 0);
+				uint32_t param2 = list_get(instruccion -> parametros -> elements, 1);
+				concatenarInt32(buffer, &desplazamiento, param1);
+				concatenarInt32(buffer, &desplazamiento, param2);
+				break;
+			default:
+				log_warning(logger, "CASO EXIT");
+				break;
+
+		}
+		//concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements, 0));
+		log_debug(logger, "CONCATENE INST");
 	}
 
 	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
 	free(buffer);
 
 }
+
+int numIdentificador(t_instruccion inst){
+	int n = 0;
+
+	if(string_equals_ignore_case(inst . identificador, "EXIT")){
+		n = 99;
+		return n;
+	}
+
+	if(string_equals_ignore_case(inst . identificador, "NO_OP")){
+		n = 1;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "I/O")){
+		n = 1;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "READ")){
+		n = 1;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "COPY")){
+		n = 2;
+		return n;
+	}
+	if(string_equals_ignore_case(inst . identificador, "WRITE")){
+		n = 2;
+		return n;
+	}
+
+}
+
 
 uint32_t tamanioIdentificadores(t_list* lista){
 	uint32_t cantidadInstrucciones = list_size(lista);
@@ -111,11 +163,11 @@ void enviarInstruccion(int socket_receptor, t_instruccion instruccion){
 	int desplazamiento = 0;
 
 	concatenarString(buffer, &desplazamiento, instruccion . identificador);
-	concatenarInt32(buffer, &desplazamiento, cantParametros);
-	for(int i = 0; i < cantParametros ; i++){
+	concatenarInt32(buffer, &desplazamiento, list_get(instruccion . parametros -> elements, 0));
+/*	for(int i = 0; i < cantParametros ; i++){
 		uint32_t parametro = list_get(instruccion . parametros -> elements, i);
 		concatenarInt32(buffer, &desplazamiento, parametro);
-	}
+	}*/
 //	concatenarListaInt32(buffer, &desplazamiento, instruccion . parametros -> elements);
 
 	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
