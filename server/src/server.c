@@ -9,7 +9,7 @@ int main(void) {
 
 //	t_list* lista = deserializarListaInstrucciones(cliente_fd)
 
-	t_list* lista = deserializarInstrucciones1Parametro(cliente_fd);
+/*	t_list* lista = deserializarInstrucciones1Parametro(cliente_fd);
 	//log_error(logger, "LLEGO LA LISTA %i", list_size(lista) );
 	t_instruccion* inst = list_remove(lista, 0);
 	log_error(logger, "%s", inst -> identificador );
@@ -29,16 +29,16 @@ int main(void) {
 
 	//t_instruccion* inst = deserializarUnaInstruccion(cliente_fd);
 	//log_error(logger, "%s", inst -> identificador);
-	//log_error(logger, "%i", list_get(inst -> parametros -> elements, 0));
-/*
+	//log_error(logger, "%i", list_get(inst -> parametros -> elements, 0));*/
+
 	PCB* unPCB = deserializarPCB(cliente_fd);
 
 	log_error(logger, "RECIBI INSTRUCCIONES DE KERNEL 1) ");
-	mostrarDatosPCB(*unPCB, logger);
+	//mostrarDatosPCB(*unPCB, logger);
 	unPCB -> program_counter = 9999;
 
 	enviarPCB(cliente_fd, *unPCB, logger);
-
+	/*
 
 	unPCB = deserializarPCB(cliente_fd);
 	log_error(logger, "RECIBI INSTRUCCIONES DE KERNEL 2) ");
@@ -52,12 +52,28 @@ int main(void) {
 void iterator(char* value) {
 	log_info(logger,"%s", value);
 }
-void mostrarDatosPCB(PCB unPCB, t_log* log){
-	log_info(log, "ID PCB: %i", unPCB . id);
-	log_info(log, "TAMANIO PCB: %i", unPCB . tamanio);
-	log_info(log, "PC PCB: %i", unPCB . program_counter);
-	log_info(log, "TP PCB: %i", unPCB . tabla_paginas);
-	log_info(log, "ESTIMACION PCB: %f", unPCB . estimacion_rafaga);
-	log_info(log, "CANTIDAD INST: %i", list_size(unPCB . instrucciones));
+void mostrarDatosPCB(PCB unPCB, t_log* logger){
+	log_info(logger, "ID PCB: %i", unPCB . id);
+	log_info(logger, "TAMANIO PCB: %i", unPCB . tamanio);
+	log_info(logger, "PC PCB: %i", unPCB . program_counter);
+	log_info(logger, "TP PCB: %i", unPCB . tabla_paginas);
+	log_info(logger, "ESTIMACION PCB: %f", unPCB . estimacion_rafaga);
+	log_info(logger, "CANTIDAD INST: %i", list_size(unPCB . instrucciones));
+
+	t_instruccion* inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+
+	inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,1));
+
+	inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+
+	inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
 
 }

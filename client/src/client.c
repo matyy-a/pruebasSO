@@ -62,6 +62,7 @@ int main(void)
 	proceso -> instrucciones = queue_create();
 	list_add(proceso -> instrucciones -> elements, instrucc1);
 	list_add(proceso -> instrucciones -> elements, instrucc2);
+	list_add(proceso -> instrucciones -> elements, instrucc1);
 	list_add(proceso -> instrucciones -> elements, instrucc3);
 
 	t_list* lista = list_create();
@@ -74,26 +75,25 @@ int main(void)
 	//enviarInstrucciones(lista, logger);
 	//uint32_t t = tamanioTotalListaInst(lista);
 	//enviarInstruccion(conexion, *instrucc1);
-	log_warning(logger, "NUMERO %i",numIdentificador(*instrucc3));
-	enviarInstrucciones(conexion, lista, logger);
+//	log_warning(logger, "NUMERO %i",numIdentificador(*instrucc3));
+//	enviarInstrucciones(conexion, lista, logger);
 	//log_error(logger, "ENVIE INSTRUCCION");
 
 
-/*
 	generarEstructuraPCB(23, proceso);
 
 	PCB* unPCB = list_get(procesosNew, 0);
 
+	enviarPCB(conexion, *unPCB, logger);
 	log_warning(logger, "MIS DATOS");
 	mostrarDatosPCB(*unPCB, logger);
 
-	enviarPCB(conexion, *unPCB, logger);
 
-	unPCB = deserializarPCB(conexion, logger);
+	unPCB = deserializarPCB(conexion);
 
 	log_warning(logger, "RECIBI DATOS DE CPU 1)");
 	mostrarDatosPCB(*unPCB, logger);
-
+/*
 	unPCB -> estimacion_rafaga = 8884.25;
 	enviarPCB(conexion, *unPCB, logger);
 
@@ -106,13 +106,29 @@ int main(void)
 
 }
 
-void mostrarDatosPCB(PCB unPCB, t_log* log){
-	log_info(log, "ID PCB: %i", unPCB . id);
-	log_info(log, "TAMANIO PCB: %i", unPCB . tamanio);
-	log_info(log, "PC PCB: %i", unPCB . program_counter);
-	log_info(log, "TP PCB: %i", unPCB . tabla_paginas);
-	log_info(log, "ESTIMACION PCB: %f", unPCB . estimacion_rafaga);
-	log_info(log, "CANTIDAD INST: %i", list_size(unPCB . instrucciones));
+void mostrarDatosPCB(PCB unPCB, t_log* logger){
+	log_info(logger, "ID PCB: %i", unPCB . id);
+	log_info(logger, "TAMANIO PCB: %i", unPCB . tamanio);
+	log_info(logger, "PC PCB: %i", unPCB . program_counter);
+	log_info(logger, "TP PCB: %i", unPCB . tabla_paginas);
+	log_info(logger, "ESTIMACION PCB: %f", unPCB . estimacion_rafaga);
+	log_info(logger, "CANTIDAD INST: %i", list_size(unPCB . instrucciones));
+
+	t_instruccion* inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+
+	inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,1));
+
+	inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
+	log_error(logger, "%i", list_get(inst -> parametros -> elements,0));
+
+	inst = list_remove(unPCB . instrucciones, 0);
+	log_error(logger, "%s", inst -> identificador );
 
 }
 

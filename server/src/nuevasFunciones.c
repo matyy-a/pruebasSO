@@ -157,14 +157,9 @@ PCB* deserializarPCB(int socket_emisor){
 	unPCB -> tabla_paginas = deserializarInt32(socket_emisor);
 	unPCB -> estimacion_rafaga = deserializarDouble(socket_emisor);
 	unPCB -> instrucciones = list_create();
-	uint32_t cantidadInstrucciones = deserializarInt32(socket_emisor);
-	for (int i = 0; i < cantidadInstrucciones; i++){
-		t_instruccion* unaInstruccion = asignarMemoria(sizeof(t_instruccion));
-		unaInstruccion -> identificador = deserializarString(socket_emisor);
-		unaInstruccion -> parametros = queue_create();
-		unaInstruccion -> parametros -> elements = deserializarListaInt32(socket_emisor);
-		list_add(unPCB -> instrucciones, unaInstruccion);
-	}
+	t_list* recibirInstrucciones = list_create();
+	recibirInstrucciones = deserializarInstrucciones1Parametro(socket_emisor);
+	list_add_all(unPCB -> instrucciones, recibirInstrucciones);
 
 	//unPCB -> instrucciones = list_create();
 	//t_list* recibirInstrucciones = list_create();
@@ -248,9 +243,9 @@ int recibirMensaje(int socketEmisor, void* buffer, int bytesMaximos){
 
 /****************************************************************/
 void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger){
-	int tamanioInstruccionesTotal = tamanio_listaInst(unPCB.instrucciones);
 	uint32_t cantidadInstrucciones = list_size(unPCB.instrucciones);
-	int tamanioBuffer = sizeof(uint32_t)*4 + sizeof(double) + sizeof(uint32_t) + tamanioInstruccionesTotal;
+	log_debug(logger, "INSTRUCCIONES %i", cantidadInstrucciones);
+	int tamanioBuffer = sizeof(uint32_t)*4 + sizeof(double) + sizeof(uint32_t) + sizeof(uint32_t) + tamanioTotalListaInst(unPCB.instrucciones);
 
 	void* buffer = asignarMemoria(tamanioBuffer);
 
@@ -261,13 +256,37 @@ void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger){
 	concatenarInt32(buffer, &desplazamiento, unPCB . program_counter);
 	concatenarInt32(buffer, &desplazamiento, unPCB . tabla_paginas);
 	concatenarDouble(buffer, &desplazamiento, unPCB . estimacion_rafaga);
+	// Concatenar Instrucciones
 	concatenarInt32(buffer, &desplazamiento, cantidadInstrucciones);
-	log_info(logger, "********CANT INSTRUCCIONES A ENVIAR %i********", cantidadInstrucciones);
+
 	for(int i = 0; i < cantidadInstrucciones; i++){
-		t_instruccion* unaInstruccion = list_get(unPCB . instrucciones, i);
-		concatenarString(buffer, &desplazamiento, unaInstruccion -> identificador);
-		concatenarListaInt32(buffer, &desplazamiento, unaInstruccion -> parametros -> elements);
+		t_instruccion* instruccion = list_get(unPCB . instrucciones, i);
+		log_debug(logger, "FOR %s", instruccion -> identificador);
+		concatenarString(buffer, &desplazamiento, instruccion -> identificador);
+		int parametros = numIdentificador(*instruccion);
+		log_error(logger, "%s %i", instruccion -> identificador, parametros);
+		switch(parametros){
+			case 1:
+				log_warning(logger, "PRIMER CASO");
+				uint32_t unParametro = list_get(instruccion -> parametros -> elements, 0);
+				concatenarInt32(buffer, &desplazamiento, unParametro);
+				break;
+			case 2:
+				log_warning(logger, "SEGUNDO CASO");
+				uint32_t param1 = list_get(instruccion -> parametros -> elements, 0);
+				uint32_t param2 = list_get(instruccion -> parametros -> elements, 1);
+				concatenarInt32(buffer, &desplazamiento, param1);
+				concatenarInt32(buffer, &desplazamiento, param2);
+				break;
+			default:
+				log_warning(logger, "CASO EXIT");
+				break;
+
+		}
+		//concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements, 0));
+		log_debug(logger, "CONCATENE INST");
 	}
+
 
 	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
 	free(buffer);

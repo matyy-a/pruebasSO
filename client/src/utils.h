@@ -54,6 +54,7 @@ t_list* procesosNew;
 int numIdentificador(t_instruccion inst);
 void enviarInstruccion(int socket_receptor, t_instruccion instruccion);
 t_instruccion* deserializarUnaInstruccion(int emisor);
+t_list* deserializarInstrucciones1Parametro(int emisor);
 int numIdentificador(t_instruccion inst);
 uint32_t tamanioTotalListaInst(t_list* lista);
 uint32_t cantidadParametros(t_list* lista);
@@ -76,7 +77,7 @@ void concatenarListaInt32(void* buffer, int* desplazamiento, t_list* listaArchiv
 void concatenarInstruccion(void* buffer, int* desplazamiento, t_instruccion* unaInstruccion);
 
 
-PCB* deserializarPCB(int socket_emisor, t_log* logger);
+PCB* deserializarPCB(int socket_emisor);
 uint32_t deserializarInt32(int emisor);
 t_list* deserializarListaInt32(int emisor);
 t_list* deserializarListaInstrucciones(int emisor);
