@@ -52,6 +52,15 @@ typedef struct {
 
 t_list* procesosNew;
 
+void enviarInstruccion(int socket_receptor, t_instruccion instruccion);
+t_instruccion* deserializarUnaInstruccion(int emisor);
+
+uint32_t tamanioTotalListaInst(t_list* lista);
+uint32_t cantidadParametros(t_list* lista);
+uint32_t tamanioParametros(t_list* lista);
+uint32_t tamanioIdentificadores(t_list* lista);
+t_list* deserializarListaInstrucciones(int socket_emisor);
+void enviarInstrucciones(int socket_receptor, t_list* lista);
 PCB crearPCB(int idPCB, t_proceso* proceso);
 void agregarEstadoNew(PCB* unPCB );
 void generarEstructuraPCB(int idPCB, t_proceso* proceso);

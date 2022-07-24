@@ -44,8 +44,20 @@ int main(void)
 	proceso -> tamanio_proceso = 15;
 	proceso -> instrucciones = queue_create();
 	list_add(proceso -> instrucciones -> elements, instrucc1);
+	list_add(proceso -> instrucciones -> elements, instrucc1);
+
+	t_list* lista = list_create();
+	list_add(lista, instrucc1);
+	list_add(lista, instrucc1);
+	list_add(lista, instrucc1);
+
+	//enviarInstrucciones(lista, logger);
+	//uint32_t t = tamanioTotalListaInst(lista);
+	enviarInstruccion(conexion, *instrucc1);
+	log_error(logger, "ENVIE INSTRUCCION");
 
 
+/*
 	generarEstructuraPCB(23, proceso);
 
 	PCB* unPCB = list_get(procesosNew, 0);
@@ -67,7 +79,7 @@ int main(void)
 	log_warning(logger, "RECIBI DATOS DE CPU 2)");
 	mostrarDatosPCB(*unPCB, logger);
 	//log_info(logger, "SIZE OF LIST NEW: %i", list_size(procesosNew));
-
+*/
 	terminar_programa(conexion, logger, config);
 
 }

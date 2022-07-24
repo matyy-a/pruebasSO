@@ -9,6 +9,7 @@
 
 void iterator(char* value);
 void mostrarDatosPCB(PCB unPCB, t_log* log);
+
 #endif /* SERVER_H_ */
 
 

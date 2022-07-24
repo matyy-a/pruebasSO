@@ -1,5 +1,102 @@
 #include"utils.h"
 
+t_instruccion* deserializarUnaInstruccion(int emisor){
+	t_instruccion* inst = asignarMemoria(sizeof(t_instruccion));
+	inst -> identificador = deserializarString(emisor);
+	inst -> parametros = queue_create();
+	uint32_t cantParametros = deserializarInt32(emisor);
+	for(int i = 0; i < cantParametros ; i++){
+		uint32_t parametro = deserializarInt32(emisor);
+		list_add(inst -> parametros -> elements, parametro);
+	}
+//	inst -> parametros -> elements = deserializarListaInt32(emisor);
+	return inst;
+}
+
+void enviarInstruccion(int socket_receptor, t_instruccion instruccion){
+	uint32_t cantParametros = instruccion . parametros -> elements -> elements_count;
+	uint32_t tamanioIdentificador = strlen(instruccion . identificador)+1;
+
+	int tamanioBuffer = tamanioIdentificador + cantParametros*sizeof(uint32_t);
+	void* buffer = asignarMemoria(tamanioBuffer);
+	int desplazamiento = 0;
+
+	concatenarString(buffer, &desplazamiento, instruccion . identificador);
+	concatenarListaInt32(buffer, &desplazamiento, instruccion . parametros -> elements);
+
+	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
+	free(buffer);
+}
+
+t_list* deserializarListaInstrucciones(int socket_emisor){
+	uint32_t cantidadInstrucciones = deserializarInt32(socket_emisor);
+	t_list* respuesta = list_create();
+	for(int i = 0; i < cantidadInstrucciones; i++){
+		t_instruccion* instruccion = asignarMemoria(sizeof(t_instruccion));
+		instruccion -> identificador = deserializarString(socket_emisor);
+		instruccion -> parametros = queue_create();
+		instruccion -> parametros -> elements = deserializarListaInt32(socket_emisor);
+		list_add(respuesta, instruccion);
+		}
+	return respuesta;
+	}
+
+void enviarInstrucciones(int socket_receptor, t_list* lista){
+	uint32_t cantidadInstrucciones = list_size(lista);
+	int tamanioBuffer = sizeof(uint32_t) + tamanioTotalListaInst(lista);
+	void* buffer = asignarMemoria(tamanioBuffer);
+
+	int desplazamiento = 0;
+
+	concatenarInt32(buffer, &desplazamiento, cantidadInstrucciones);
+
+	for(int i = 0; i < cantidadInstrucciones; i++){
+		t_instruccion* instruccion = list_get(lista, i);
+		concatenarString(buffer, &desplazamiento, instruccion -> identificador);
+		concatenarListaInt32(buffer, &desplazamiento, instruccion -> parametros -> elements);
+	}
+
+	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
+	free(buffer);
+
+}
+
+uint32_t tamanioIdentificadores(t_list* lista){
+	uint32_t cantidadInstrucciones = list_size(lista);
+	uint32_t tamanio = sizeof(uint32_t);
+	for(int i = 0; i<cantidadInstrucciones; i++){
+		t_instruccion* instruccion = list_get(lista, i);
+		tamanio += (strlen(instruccion -> identificador) + 1);
+	}
+	return tamanio;
+}
+
+
+uint32_t tamanioParametros(t_list* lista){
+	uint32_t cantidadInstrucciones = list_size(lista);
+	uint32_t tamanio = sizeof(uint32_t);
+	for(int i = 0; i<cantidadInstrucciones; i++){
+		t_instruccion* instruccion = list_get(lista, i);
+		tamanio += (list_size(instruccion -> parametros -> elements) * sizeof(uint32_t));
+	}
+	return tamanio;
+}
+
+uint32_t cantidadParametros(t_list* lista){
+	uint32_t cantidadInstrucciones = list_size(lista);
+	uint32_t tamanio = 0;
+	for(int i = 0; i<cantidadInstrucciones; i++){
+		t_instruccion* instruccion = list_get(lista, i);
+		tamanio += list_size(instruccion -> parametros -> elements);
+	}
+	return tamanio;
+}
+
+uint32_t tamanioTotalListaInst(t_list* lista){
+	uint32_t respuesta = tamanioParametros(lista) + cantidadParametros(lista) + tamanioIdentificadores(lista);
+	return respuesta;
+}
+
 
 PCB* deserializarPCB(int socket_emisor){
 	PCB* unPCB = asignarMemoria(sizeof(PCB));
@@ -45,7 +142,7 @@ uint32_t deserializarInt32(int emisor){
 	recibirMensaje(emisor, &mensaje, sizeof(uint32_t));
 	return mensaje;
 }
-
+/*
 t_list* deserializarListaInstrucciones(int emisor){
 	uint32_t elementosDeLalista = deserializarInt32(emisor);
 	t_list* respuesta = list_create();
@@ -55,7 +152,7 @@ t_list* deserializarListaInstrucciones(int emisor){
 	}
 	return respuesta;
 
-}
+}*/
 
 t_instruccion* deserializarInstruccion(int socket_emisor){
 	t_instruccion* unaInstruccion = asignarMemoria(sizeof(t_instruccion));

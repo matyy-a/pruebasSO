@@ -43,6 +43,16 @@ typedef struct {
 
 t_log* logger;
 
+void enviarInstruccion(int socket_receptor, t_instruccion instruccion);
+t_instruccion* deserializarUnaInstruccion(int emisor);
+
+uint32_t tamanioTotalListaInst(t_list* lista);
+uint32_t cantidadParametros(t_list* lista);
+uint32_t tamanioParametros(t_list* lista);
+uint32_t tamanioIdentificadores(t_list* lista);
+t_list* deserializarListaInstrucciones(int socket_emisor);
+void enviarInstrucciones(int socket_receptor, t_list* lista);
+
 PCB* deserializarPCB(int socket_emisor);
 uint32_t deserializarInt32(int emisor);
 t_list* deserializarListaInt32(int emisor);

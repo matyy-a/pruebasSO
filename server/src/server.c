@@ -7,8 +7,11 @@ int main(void) {
 	log_info(logger, "Servidor listo para recibir al cliente");
 	int cliente_fd = esperar_cliente(server_fd);
 
-	t_list* lista;
-
+//	t_list* lista = deserializarListaInstrucciones(cliente_fd);
+	t_instruccion* inst = deserializarUnaInstruccion(cliente_fd);
+	log_error(logger, "%s", inst -> identificador);
+//	log_error(logger, "%i", list_get(inst -> parametros -> elements, 0));
+/*
 	PCB* unPCB = deserializarPCB(cliente_fd);
 
 	log_error(logger, "RECIBI INSTRUCCIONES DE KERNEL 1) ");
@@ -23,7 +26,7 @@ int main(void) {
 	mostrarDatosPCB(*unPCB, logger);
 
 	unPCB -> id = 532;
-	enviarPCB(cliente_fd, *unPCB, logger);
+	enviarPCB(cliente_fd, *unPCB, logger);*/
 	return EXIT_SUCCESS;
 }
 
