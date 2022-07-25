@@ -57,7 +57,7 @@ int cantidad_de_parametros(ID_INSTRUCCION identificador);
 int deserializarInt(int emisor);
 void concatenarInt(void* buffer, int* desplazamiento, int numero);
 
-void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger, uint32_t cantidadInstrucciones);
+void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger);
 void enviarInstruccion(int socket_receptor, t_instruccion instruccion);
 t_instruccion* deserializarUnaInstruccion(int emisor);
 t_list* deserializarInstrucciones1Parametro(int emisor);

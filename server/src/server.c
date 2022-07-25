@@ -9,14 +9,14 @@ int main(void) {
 
 //	t_list* lista = deserializarListaInstrucciones(cliente_fd)
 
-	t_list* lista = deserializarListaInstruccionesK(cliente_fd);
-	log_error(logger, "RECIBI TAM LISTA %i", list_size(lista));
+//	t_list* lista = deserializarListaInstruccionesK(cliente_fd);
+/*	log_error(logger, "RECIBI TAM LISTA %i", list_size(lista));
 	envioListaInstrucciones(cliente_fd, lista);
 	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));
 	lista = deserializarListaInstruccionesK(cliente_fd);
 	log_error(logger, "RECIBI TAM LISTA %i", list_size(lista));
 	envioListaInstrucciones(cliente_fd, lista);
-	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));
+	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));*/
 /*	enviarInstrucciones(cliente_fd, lista, logger);
 	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));
 	t_list* lista2 = deserializarInstrucciones1Parametro(cliente_fd);
@@ -44,23 +44,22 @@ int main(void) {
 	//t_instruccion* inst = deserializarUnaInstruccion(cliente_fd);
 	//log_error(logger, "%s", inst -> identificador);
 	//log_error(logger, "%i", list_get(inst -> parametros -> elements, 0));*/
-/*
+
 	PCB* unPCB = deserializarPCB(cliente_fd);
 	uint32_t cant = list_size(unPCB -> instrucciones);
 	log_error(logger, "RECIBI INSTRUCCIONES DE KERNEL 1) %i ", cant);
 	//mostrarDatosPCB(*unPCB, logger);
 	unPCB -> program_counter = 9999;
 
-	enviarPCB(cliente_fd, *unPCB, logger, cant);
+	enviarPCB(cliente_fd, *unPCB, logger);
 
 
 	unPCB = deserializarPCB(cliente_fd);
 	cant = list_size(unPCB -> instrucciones);
-	log_error(logger, "%i", cant);
 	log_error(logger, "RECIBI INSTRUCCIONES DE KERNEL 2) %i ", cant);
 
 	unPCB -> id = 532;
-	enviarPCB(cliente_fd, *unPCB, logger, cant);*/
+	enviarPCB(cliente_fd, *unPCB, logger);
 	return EXIT_SUCCESS;
 }
 

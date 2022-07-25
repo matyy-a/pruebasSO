@@ -192,8 +192,9 @@ void enviarInstruccion(int socket_receptor, t_instruccion instruccion){
 	free(buffer);
 }
 
-void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger, uint32_t cantidadInstrucciones){
-	int tamanioBuffer = sizeof(uint32_t)*4 + sizeof(double) + sizeof(uint32_t) + sizeof(uint32_t) + tamanioTotalListaInst(unPCB.instrucciones);
+void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger){
+	uint32_t cantidadInstrucciones = list_size(unPCB . instrucciones);
+	int tamanioBuffer = sizeof(uint32_t)*4 + sizeof(double) + tamanioParametros(unPCB . instrucciones) + cantidadInstrucciones*sizeof(ID_INSTRUCCION);
 
 	void* buffer = asignarMemoria(tamanioBuffer);
 
@@ -204,40 +205,31 @@ void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger, uint32_t cantidadI
 	concatenarInt32(buffer, &desplazamiento, unPCB . program_counter);
 	concatenarInt32(buffer, &desplazamiento, unPCB . tabla_paginas);
 	concatenarDouble(buffer, &desplazamiento, unPCB . estimacion_rafaga);
+
 	// Concatenar Instrucciones
 	concatenarInt32(buffer, &desplazamiento, cantidadInstrucciones);
 
-	for(int i = 0; i < cantidadInstrucciones; i++){
-		t_instruccion* instruccion = list_get(unPCB . instrucciones, i);
-		//concatenarString(buffer, &desplazamiento, instruccion -> identificador);
-		int parametros = numIdentificador(*instruccion);
+	for(int k = 0; k < cantidadInstrucciones; k++){
+		t_instruccion* instruccion = list_get(unPCB . instrucciones, k);
+		int parametros = cantidad_de_parametros(instruccion -> identificador);
+		concatenarInt32(buffer, &desplazamiento, (uint32_t) instruccion -> identificador);
 		switch(parametros){
-			case 1:;
-				uint32_t unParametro = list_get(instruccion -> parametros -> elements, 0);
-				concatenarInt32(buffer, &desplazamiento, unParametro);
+			case 1:
+				concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements,0));
 				break;
-			case 2:;
-				uint32_t param1 = list_get(instruccion -> parametros -> elements, 0);
-				uint32_t param2 = list_get(instruccion -> parametros -> elements, 1);
-				concatenarInt32(buffer, &desplazamiento, param1);
-				concatenarInt32(buffer, &desplazamiento, param2);
+			case 2:
+				concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements,0));
+				concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements,1));
 				break;
-			default:
+			case 0:
 				break;
-
 		}
-		//concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements, 0));
 	}
 
 
 	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
 	free(buffer);
-	//log_debug(logger, "INSTRUCCIONES %i", cantidadInstrucciones);
-//	log_info(logger, "********Enviando PCB ID %i a CPU********", unPCB.id);
 	log_debug(logger, "********Enviando PCB ID %i a CPU********", unPCB.id);
-//	log_error(logger, "********Enviando PCB ID %i a CPU********", unPCB.id);
-//	log_trace(logger, "********Enviando PCB ID %i a CPU********", unPCB.id);
-//	log_warning(logger, "********Enviando PCB ID %i a CPU********", unPCB.id);
 }
 
 
@@ -313,14 +305,8 @@ PCB* deserializarPCB(int socket_emisor){
 	unPCB -> estimacion_rafaga = deserializarDouble(socket_emisor);
 	unPCB -> instrucciones = list_create();
 	t_list* recibirInstrucciones = list_create();
-	recibirInstrucciones = deserializarInstrucciones1Parametro(socket_emisor);
+	recibirInstrucciones = deserializarListaInstruccionesK(socket_emisor);
 	list_add_all(unPCB -> instrucciones, recibirInstrucciones);
-
-	//unPCB -> instrucciones = list_create();
-	//t_list* recibirInstrucciones = list_create();
-
-	//recibirInstrucciones = deserializarListaInstrucciones(socket_emisor);
-	//list_add_all(unPCB -> instrucciones, recibirInstrucciones);
 	return unPCB;
 }
 
@@ -414,7 +400,7 @@ void envioListaInstrucciones(int receptor, t_list* lista){
 
 
 t_list* deserializarListaInstruccionesK(int emisor){
-	int tamanioLista = deserializarInt(emisor);
+	uint32_t tamanioLista = deserializarInt(emisor);
 	t_list* lista = list_create();
 	for(int k = 0; k < tamanioLista; k++){
 		t_instruccion* instruccion = asignarMemoria(sizeof(instruccion));

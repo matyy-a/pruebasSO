@@ -85,6 +85,7 @@ int main(void)
    void envioListaInstrucciones(int receptor, t_list* lista);
  *
  */
+/*
 	envioListaInstrucciones(conexion, lista);
 	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));
 	lista = deserializarListaInstruccionesK(conexion);
@@ -103,28 +104,28 @@ int main(void)
 	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista2));
 	//log_error(logger, "ENVIE INSTRUCCION");
 */
-/*
+
 	generarEstructuraPCB(23, proceso);
 
 	PCB* unPCB = list_get(procesosNew, 0);
 	uint32_t cant = list_size(unPCB -> instrucciones);
-	enviarPCB(conexion, *unPCB, logger, cant);
+	enviarPCB(conexion, *unPCB, logger);
 	log_warning(logger, "MIS DATOS");
 
 
 	unPCB = deserializarPCB(conexion);
 
-	log_warning(logger, "RECIBI DATOS DE CPU 1)");
+	log_warning(logger, "RECIBI DATOS DE CPU 1) %i", cant);
 
 	unPCB -> estimacion_rafaga = 8884.25;
 	cant = list_size(unPCB -> instrucciones);
 	log_error(logger, "%i", cant);
-	enviarPCB(conexion, *unPCB, logger, cant);
+	enviarPCB(conexion, *unPCB, logger);
 
 	unPCB = deserializarPCB(conexion);
-	log_warning(logger, "RECIBI DATOS DE CPU 2)");
+	log_warning(logger, "RECIBI DATOS DE CPU 2) %i", cant);
 	//log_info(logger, "SIZE OF LIST NEW: %i", list_size(procesosNew));
-	log_debug(logger, "INSTRUCCIONES %i", list_size(unPCB -> instrucciones));*/
+	log_debug(logger, "INSTRUCCIONES %i", list_size(unPCB -> instrucciones));
 	terminar_programa(conexion, logger, config);
 
 }

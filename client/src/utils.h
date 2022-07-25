@@ -85,7 +85,7 @@ void enviarInstrucciones(int socket_receptor, t_list* lista, t_log* logger);
 PCB crearPCB(int idPCB, t_proceso* proceso);
 void agregarEstadoNew(PCB* unPCB );
 void generarEstructuraPCB(int idPCB, t_proceso* proceso);
-void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger, uint32_t cantidadInstrucciones);
+void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger);
 void mostrarDatosPCB(PCB unPCB, t_log* log);
 void* asignarMemoria(int cantidad);
 uint32_t tamanio_listaInst(t_list* listaInst);
