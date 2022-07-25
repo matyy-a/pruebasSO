@@ -15,6 +15,15 @@
 #define IP "127.0.0.1"
 #define PUERTO "4444"
 
+typedef enum{
+	NO_OP,
+	IO,
+	READ,
+	WRITE,
+	COPY,
+	EXIT,
+} ID_INSTRUCCION;
+
 typedef enum
 {
 	MENSAJE,
@@ -31,8 +40,7 @@ typedef struct{
 }PCB;
 
 typedef struct {
-	int tamanio_id;
-	char* identificador;
+	ID_INSTRUCCION identificador ;
 	t_queue* parametros;
 }t_instruccion;
 
@@ -43,6 +51,13 @@ typedef struct {
 
 t_log* logger;
 
+t_list* deserializarListaInstruccionesK(int emisor);
+void envioListaInstrucciones(int receptor, t_list* lista);
+int cantidad_de_parametros(ID_INSTRUCCION identificador);
+int deserializarInt(int emisor);
+void concatenarInt(void* buffer, int* desplazamiento, int numero);
+
+void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger, uint32_t cantidadInstrucciones);
 void enviarInstruccion(int socket_receptor, t_instruccion instruccion);
 t_instruccion* deserializarUnaInstruccion(int emisor);
 t_list* deserializarInstrucciones1Parametro(int emisor);
@@ -52,7 +67,7 @@ uint32_t cantidadParametros(t_list* lista);
 uint32_t tamanioParametros(t_list* lista);
 uint32_t tamanioIdentificadores(t_list* lista);
 t_list* deserializarListaInstrucciones(int socket_emisor);
-void enviarInstrucciones(int socket_receptor, t_list* lista);
+void enviarInstrucciones(int socket_receptor, t_list* lista, t_log* logger);
 
 PCB* deserializarPCB(int socket_emisor);
 uint32_t deserializarInt32(int emisor);

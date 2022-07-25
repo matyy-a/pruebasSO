@@ -11,12 +11,21 @@
 #include<commons/log.h>
 #include<commons/collections/list.h>
 #include<commons/collections/queue.h>
-
+t_log* logger;
 typedef enum
 {
 	MENSAJE,
 	PAQUETE
 }op_code;
+
+typedef enum{
+	NO_OP,
+	IO,
+	READ,
+	WRITE,
+	COPY,
+	EXIT,
+} ID_INSTRUCCION;
 
 typedef struct
 {
@@ -40,8 +49,7 @@ typedef struct{
 }PCB;
 
 typedef struct {
-	int tamanio_id;
-	char* identificador;
+	ID_INSTRUCCION identificador ;
 	t_queue* parametros;
 }t_instruccion;
 
@@ -51,6 +59,18 @@ typedef struct {
 }t_proceso;
 
 t_list* procesosNew;
+
+void mostrar_proceso(t_proceso* proceso);
+void mostrar_instruccion(t_instruccion* instruccion);
+t_proceso* deserializar_proceso(void* contenido, int tam_max);
+int cantidad_de_parametros(ID_INSTRUCCION identificador);
+
+t_list* deserializarListaInstruccionesK(int emisor);
+void envioListaInstrucciones(int receptor, t_list* lista);
+
+int deserializarInt(int emisor);
+void concatenarInt(void* buffer, int* desplazamiento, int numero);
+
 int numIdentificador(t_instruccion inst);
 void enviarInstruccion(int socket_receptor, t_instruccion instruccion);
 t_instruccion* deserializarUnaInstruccion(int emisor);
@@ -65,7 +85,7 @@ void enviarInstrucciones(int socket_receptor, t_list* lista, t_log* logger);
 PCB crearPCB(int idPCB, t_proceso* proceso);
 void agregarEstadoNew(PCB* unPCB );
 void generarEstructuraPCB(int idPCB, t_proceso* proceso);
-void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger);
+void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger, uint32_t cantidadInstrucciones);
 void mostrarDatosPCB(PCB unPCB, t_log* log);
 void* asignarMemoria(int cantidad);
 uint32_t tamanio_listaInst(t_list* listaInst);

@@ -28,25 +28,23 @@ int numIdentificador(t_instruccion inst){
 		n = 2;
 		return n;
 	}
-
+	return n;
 }
 
 t_list* deserializarInstrucciones1Parametro(int emisor){
 	t_list* respuesta = list_create();
 	uint32_t cantidadInstrucciones = deserializarInt32(emisor);
-	log_warning(logger, "Instrucciones %i", cantidadInstrucciones);
+	//log_warning(logger, "LLEGARON Instrucciones %i", cantidadInstrucciones);
 	for(int i = 0; i < cantidadInstrucciones; i++){
-		log_error(logger, "LLEGUE AL FOR");
 		t_instruccion* unaInstruccion = deserializarUnaInstruccion(emisor);
 		list_add(respuesta, unaInstruccion);
-		log_debug(logger, "DESERIALICE INST");
 	}
 	return respuesta;
 }
 
 t_instruccion* deserializarUnaInstruccion(int emisor){
 	t_instruccion* inst = asignarMemoria(sizeof(t_instruccion));
-	inst -> identificador = deserializarString(emisor);
+	//inst -> identificador = deserializarString(emisor);
 	inst -> parametros = queue_create();
 	if(string_equals_ignore_case(inst -> identificador, "I/O") ||
 			string_equals_ignore_case(inst -> identificador, "NO_OP") ||
@@ -66,13 +64,13 @@ t_instruccion* deserializarUnaInstruccion(int emisor){
 
 void enviarInstruccion(int socket_receptor, t_instruccion instruccion){
 	uint32_t cantParametros = instruccion . parametros -> elements -> elements_count;
-	uint32_t tamanioIdentificador = strlen(instruccion . identificador)+1;
+	//uint32_t tamanioIdentificador = strlen(instruccion . identificador)+1;
 
-	int tamanioBuffer = tamanioIdentificador + cantParametros*sizeof(uint32_t);
+	int tamanioBuffer = 0;
 	void* buffer = asignarMemoria(tamanioBuffer);
 	int desplazamiento = 0;
 
-	concatenarString(buffer, &desplazamiento, instruccion . identificador);
+	//concatenarString(buffer, &desplazamiento, instruccion . identificador);
 	concatenarListaInt32(buffer, &desplazamiento, instruccion . parametros -> elements);
 
 	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
@@ -84,7 +82,7 @@ t_list* deserializarListaInstrucciones(int socket_emisor){
 	t_list* respuesta = list_create();
 	for(int i = 0; i < cantidadInstrucciones; i++){
 		t_instruccion* instruccion = asignarMemoria(sizeof(t_instruccion));
-		instruccion -> identificador = deserializarString(socket_emisor);
+		//instruccion -> identificador = deserializarString(socket_emisor);
 		instruccion -> parametros = queue_create();
 		instruccion -> parametros -> elements = deserializarListaInt32(socket_emisor);
 		list_add(respuesta, instruccion);
@@ -92,19 +90,33 @@ t_list* deserializarListaInstrucciones(int socket_emisor){
 	return respuesta;
 	}
 
-void enviarInstrucciones(int socket_receptor, t_list* lista){
+void enviarInstrucciones(int socket_receptor, t_list* lista, t_log* logger){
 	uint32_t cantidadInstrucciones = list_size(lista);
-	int tamanioBuffer = sizeof(uint32_t) + tamanioTotalListaInst(lista);
+	int tamanioBuffer = sizeof(uint32_t)*2 + tamanioTotalListaInst(lista);
 	void* buffer = asignarMemoria(tamanioBuffer);
 
 	int desplazamiento = 0;
-
 	concatenarInt32(buffer, &desplazamiento, cantidadInstrucciones);
-
 	for(int i = 0; i < cantidadInstrucciones; i++){
 		t_instruccion* instruccion = list_get(lista, i);
-		concatenarString(buffer, &desplazamiento, instruccion -> identificador);
-		concatenarListaInt32(buffer, &desplazamiento, instruccion -> parametros -> elements);
+	//	concatenarString(buffer, &desplazamiento, instruccion -> identificador);
+		int parametros = numIdentificador(*instruccion);
+		switch(parametros){
+			case 1:;
+				uint32_t unParametro = list_get(instruccion -> parametros -> elements, 0);
+				concatenarInt32(buffer, &desplazamiento, unParametro);
+				break;
+			case 2:;
+				uint32_t param1 = list_get(instruccion -> parametros -> elements, 0);
+				uint32_t param2 = list_get(instruccion -> parametros -> elements, 1);
+				concatenarInt32(buffer, &desplazamiento, param1);
+				concatenarInt32(buffer, &desplazamiento, param2);
+				break;
+			default:;
+				break;
+
+		}
+		//concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements, 0));
 	}
 
 	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
@@ -117,7 +129,7 @@ uint32_t tamanioIdentificadores(t_list* lista){
 	uint32_t tamanio = sizeof(uint32_t);
 	for(int i = 0; i<cantidadInstrucciones; i++){
 		t_instruccion* instruccion = list_get(lista, i);
-		tamanio += (strlen(instruccion -> identificador) + 1);
+	//	tamanio += (strlen(instruccion -> identificador) + 1);
 	}
 	return tamanio;
 }
@@ -202,7 +214,7 @@ t_list* deserializarListaInstrucciones(int emisor){
 
 t_instruccion* deserializarInstruccion(int socket_emisor){
 	t_instruccion* unaInstruccion = asignarMemoria(sizeof(t_instruccion));
-	unaInstruccion -> identificador = deserializarString(socket_emisor);
+	//unaInstruccion -> identificador = deserializarString(socket_emisor);
 	unaInstruccion -> parametros = queue_create();
 	unaInstruccion -> parametros -> elements = deserializarListaInt32(socket_emisor);
 	return unaInstruccion;
@@ -242,9 +254,7 @@ int recibirMensaje(int socketEmisor, void* buffer, int bytesMaximos){
 }
 
 /****************************************************************/
-void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger){
-	uint32_t cantidadInstrucciones = list_size(unPCB.instrucciones);
-	log_debug(logger, "INSTRUCCIONES %i", cantidadInstrucciones);
+void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger, uint32_t cantidadInstrucciones){
 	int tamanioBuffer = sizeof(uint32_t)*4 + sizeof(double) + sizeof(uint32_t) + sizeof(uint32_t) + tamanioTotalListaInst(unPCB.instrucciones);
 
 	void* buffer = asignarMemoria(tamanioBuffer);
@@ -261,33 +271,27 @@ void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger){
 
 	for(int i = 0; i < cantidadInstrucciones; i++){
 		t_instruccion* instruccion = list_get(unPCB . instrucciones, i);
-		log_debug(logger, "FOR %s", instruccion -> identificador);
-		concatenarString(buffer, &desplazamiento, instruccion -> identificador);
+	//	concatenarString(buffer, &desplazamiento, instruccion -> identificador);
 		int parametros = numIdentificador(*instruccion);
-		log_error(logger, "%s %i", instruccion -> identificador, parametros);
 		switch(parametros){
-			case 1:
-				log_warning(logger, "PRIMER CASO");
+			case 1:;
 				uint32_t unParametro = list_get(instruccion -> parametros -> elements, 0);
 				concatenarInt32(buffer, &desplazamiento, unParametro);
 				break;
-			case 2:
-				log_warning(logger, "SEGUNDO CASO");
+			case 2:;
 				uint32_t param1 = list_get(instruccion -> parametros -> elements, 0);
 				uint32_t param2 = list_get(instruccion -> parametros -> elements, 1);
 				concatenarInt32(buffer, &desplazamiento, param1);
 				concatenarInt32(buffer, &desplazamiento, param2);
 				break;
 			default:
-				log_warning(logger, "CASO EXIT");
 				break;
 
 		}
 		//concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements, 0));
-		log_debug(logger, "CONCATENE INST");
 	}
 
-
+	log_debug(logger, "INSTRUCCIONES %i", cantidadInstrucciones);
 	enviarMensaje(socket_receptor, buffer, tamanioBuffer);
 	free(buffer);
 //	log_info(logger, "********Enviando PCB ID %i a CPU********", unPCB.id);
@@ -297,18 +301,14 @@ void enviarPCB(int socket_receptor, PCB unPCB, t_log* logger){
 //	log_warning(logger, "********Enviando PCB ID %i a CPU********", unPCB.id);
 }
 
-uint32_t tamanio_listaInst(t_list* listaInst){
-	uint32_t respuesta = sizeof(uint32_t);
-	for(int i = 0; i < listaInst -> elements_count; i++ ){
-		t_instruccion* inst = list_get(listaInst, i);
-		int cantidadParametros = inst -> parametros -> elements -> elements_count;
-		respuesta += sizeof(uint32_t) +  strlen(inst -> identificador) + 1 + sizeof(uint32_t)*cantidadParametros;
-	}
-	return respuesta;
-}
 
 void enviarMensaje(int socket, void* mensaje, int tamanio){
 	send(socket, mensaje, tamanio, 0);
+}
+
+void concatenarInt(void* buffer, int* desplazamiento, int numero){
+	memcpy(buffer + *desplazamiento, &numero, sizeof(int));
+	*desplazamiento = *desplazamiento + sizeof(int);
 }
 
 void concatenarInt32(void* buffer, int* desplazamiento, uint32_t numero){
@@ -334,8 +334,99 @@ void concatenarListaInt32(void* buffer, int* desplazamiento, t_list* listaArchiv
 	}
 }
 
+
+
 void concatenarInstruccion(void* buffer, int* desplazamiento, t_instruccion* unaInstruccion){
-	concatenarString(buffer, desplazamiento, unaInstruccion -> identificador);
+	//concatenarString(buffer, desplazamiento, unaInstruccion -> identificador);
 	concatenarListaInt32(buffer, desplazamiento, unaInstruccion -> parametros -> elements);
+}
+
+// Otras funciones
+void envioListaInstrucciones(int receptor, t_list* lista){
+	int tamanioLista = list_size(lista);
+
+	int desplazamiento = 0;
+	int tamanioBuffer = tamanioParametros(lista) + tamanioLista*sizeof(ID_INSTRUCCION);
+	void* buffer = asignarMemoria(tamanioBuffer);
+
+	concatenarInt(buffer, &desplazamiento, tamanioLista);
+
+	for(int k = 0; k < tamanioLista; k++){
+		t_instruccion* instruccion = list_get(lista, k);
+		int parametros = cantidad_de_parametros(instruccion -> identificador);
+		concatenarInt32(buffer, &desplazamiento, (uint32_t) instruccion -> identificador);
+		switch(parametros){
+			case 1:
+				concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements,0));
+				break;
+			case 2:
+				concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements,0));
+				concatenarInt32(buffer, &desplazamiento, list_get(instruccion -> parametros -> elements,1));
+				break;
+			case 0:
+				break;
+		}
+	}
+	//t_proceso* proceso = deserializar_proceso(buffer, tamanioBuffer);
+	//mostrar_proceso(proceso);
+
+	enviarMensaje(receptor, buffer, tamanioBuffer);
+	free(buffer);
+}
+
+t_list* deserializarListaInstruccionesK(int emisor){
+	int tamanioLista = deserializarInt(emisor);
+	t_list* lista = list_create();
+	for(int k = 0; k < tamanioLista; k++){
+		t_instruccion* instruccion = asignarMemoria(sizeof(instruccion));
+		instruccion -> identificador = deserializarInt32(emisor);
+		instruccion -> parametros = queue_create();
+		int param = cantidad_de_parametros(instruccion -> identificador);
+		switch(param){
+			case 1:
+				list_add(instruccion -> parametros -> elements, deserializarInt32(emisor));
+				break;
+			case 2:
+				list_add(instruccion -> parametros -> elements, deserializarInt32(emisor));
+				list_add(instruccion -> parametros -> elements, deserializarInt32(emisor));
+				break;
+			case 99:
+				break;
+		}
+		list_add(lista, instruccion);
+	}
+	return lista;
+}
+
+int deserializarInt(int emisor){
+	int mensaje;
+	recibirMensaje(emisor, &mensaje, sizeof(int));
+	return mensaje;
+}
+
+int cantidad_de_parametros(ID_INSTRUCCION identificador) {
+
+	switch (identificador) {
+
+		case IO:
+			return 1;
+			break;
+		case NO_OP:
+			return 1;
+			break;
+		case READ:
+			return 1;
+			break;
+		case EXIT:
+			return 0;
+			break;
+		case COPY:
+			return 2;
+			break;
+		case WRITE:
+			return 2;
+		}
+
+		return 0;
 }
 

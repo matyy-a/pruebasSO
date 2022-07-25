@@ -7,7 +7,6 @@ int main(void)
 	char* puerto;
 	char* valor;
 
-	t_log* logger;
 	t_config* config;
 	procesosNew = list_create();
 
@@ -35,26 +34,26 @@ int main(void)
 
 	//log_info(logger, "SIZE OF LIST NEW: %i", list_size(procesosNew));
 	t_instruccion* instrucc1 = asignarMemoria(sizeof(t_instruccion));
-	instrucc1 -> identificador = "NO_OP";
+	instrucc1 -> identificador = NO_OP;
 	instrucc1 -> parametros = queue_create();
 
 	list_add(instrucc1 -> parametros -> elements, 3);
 
 	t_instruccion* instrucc4 = asignarMemoria(sizeof(t_instruccion));
-	instrucc4 -> identificador = "I/O";
+	instrucc4 -> identificador = IO;
 	instrucc4 -> parametros = queue_create();
 
 	list_add(instrucc4 -> parametros -> elements, 5000);
 
 	t_instruccion* instrucc2 = asignarMemoria(sizeof(t_instruccion));
-	instrucc2 -> identificador = "WRITE";
+	instrucc2 -> identificador = WRITE;
 	instrucc2 -> parametros = queue_create();
 
 	list_add(instrucc2 -> parametros -> elements, 5000);
 	list_add(instrucc2 -> parametros -> elements, 3544);
 
 	t_instruccion* instrucc3 = asignarMemoria(sizeof(t_instruccion));
-	instrucc3 -> identificador = "EXIT";
+	instrucc3 -> identificador = EXIT;
 	instrucc3 -> parametros = queue_create();
 
 	t_proceso* proceso = asignarMemoria(sizeof(t_proceso));
@@ -68,40 +67,64 @@ int main(void)
 	t_list* lista = list_create();
 	list_add(lista, instrucc1);
 	list_add(lista, instrucc2);
+	list_add(lista, instrucc2);
+	list_add(lista, instrucc2);
+	list_add(lista, instrucc2);
+	list_add(lista, instrucc2);
+	list_add(lista, instrucc2);
+	list_add(lista, instrucc2);
+	list_add(lista, instrucc2);
 	list_add(lista, instrucc4);
 	list_add(lista, instrucc3);
 	//list_add(lista, instrucc3);
 
 	//enviarInstrucciones(lista, logger);
 	//uint32_t t = tamanioTotalListaInst(lista);
+/*
+ * t_list* deserializarListaInstruccionesK(int emisor);
+   void envioListaInstrucciones(int receptor, t_list* lista);
+ *
+ */
+	envioListaInstrucciones(conexion, lista);
+	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));
+	lista = deserializarListaInstruccionesK(conexion);
+	log_error(logger, "RECIBI TAM LISTA %i", list_size(lista));
+	envioListaInstrucciones(conexion, lista);
+	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));
+	lista = deserializarListaInstruccionesK(conexion);
+	log_error(logger, "RECIBI TAM LISTA %i", list_size(lista));
 	//enviarInstruccion(conexion, *instrucc1);
 //	log_warning(logger, "NUMERO %i",numIdentificador(*instrucc3));
-//	enviarInstrucciones(conexion, lista, logger);
+/*	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista));
+	enviarInstrucciones(conexion, lista, logger);
+	t_list* lista2 = deserializarInstrucciones1Parametro(conexion);
+	log_error(logger, "RECIBI TAM LISTA %i", list_size(lista2));
+	enviarInstrucciones(conexion, lista2, logger);
+	log_debug(logger, "ENVIE TAM LISTA %i", list_size(lista2));
 	//log_error(logger, "ENVIE INSTRUCCION");
-
-
+*/
+/*
 	generarEstructuraPCB(23, proceso);
 
 	PCB* unPCB = list_get(procesosNew, 0);
-
-	enviarPCB(conexion, *unPCB, logger);
+	uint32_t cant = list_size(unPCB -> instrucciones);
+	enviarPCB(conexion, *unPCB, logger, cant);
 	log_warning(logger, "MIS DATOS");
-	mostrarDatosPCB(*unPCB, logger);
 
 
 	unPCB = deserializarPCB(conexion);
 
 	log_warning(logger, "RECIBI DATOS DE CPU 1)");
-	mostrarDatosPCB(*unPCB, logger);
-/*
-	unPCB -> estimacion_rafaga = 8884.25;
-	enviarPCB(conexion, *unPCB, logger);
 
-	unPCB = deserializarPCB(conexion, logger);
+	unPCB -> estimacion_rafaga = 8884.25;
+	cant = list_size(unPCB -> instrucciones);
+	log_error(logger, "%i", cant);
+	enviarPCB(conexion, *unPCB, logger, cant);
+
+	unPCB = deserializarPCB(conexion);
 	log_warning(logger, "RECIBI DATOS DE CPU 2)");
-	mostrarDatosPCB(*unPCB, logger);
 	//log_info(logger, "SIZE OF LIST NEW: %i", list_size(procesosNew));
-*/
+	log_debug(logger, "INSTRUCCIONES %i", list_size(unPCB -> instrucciones));*/
 	terminar_programa(conexion, logger, config);
 
 }
